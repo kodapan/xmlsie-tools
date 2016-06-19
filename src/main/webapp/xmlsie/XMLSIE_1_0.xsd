@@ -1,0 +1,1202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="SIE">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="SE">Detta är rotelementet för samtliga typer av meddelande som kan skapas inom ramen för XMLSIE. Varje meddelande skall alltid inledas med detta element.</xsd:documentation>
+			<xsd:documentation>Typ av meddelande anges i attributet SIEType. Se dokumentation för detta för giltiga värden och dess innebörd.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="FileInfo">
+					<xsd:annotation>
+						<xsd:documentation>Innehåller generell information om filen. Avsändare, skapare m m.</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:attribute name="softwareProduct" type="xsd:string" use="required">
+							<xsd:annotation>
+								<xsd:documentation>Anger i klartext produktnamnet för den produkt som genererat filen.</xsd:documentation>
+							</xsd:annotation>
+							<!--Name of the program which created the file.-->
+						</xsd:attribute>
+						<xsd:attribute name="softwareVersion" type="xsd:string" use="required">
+							<xsd:annotation>
+								<xsd:documentation>Anger versionsnummer på den produkt som genererat filen.</xsd:documentation>
+							</xsd:annotation>
+							<!--Version number of the program which created the file.-->
+						</xsd:attribute>
+						<xsd:attribute name="createdBy" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Anger vem som har skapat filen.</xsd:documentation>
+							</xsd:annotation>
+							<!--Signature or user id for the person or process which created the file. -->
+						</xsd:attribute>
+						<xsd:attribute name="createdDate" type="xsd:date" use="required">
+							<xsd:annotation>
+								<xsd:documentation>Anger datum när filen genererades. Anges i formatet CCYY-MM-DD.</xsd:documentation>
+							</xsd:annotation>
+							<!--Date when the file was created.-->
+						</xsd:attribute>
+						<xsd:attribute name="createdTime" type="xsd:time" use="required">
+							<xsd:annotation>
+								<xsd:documentation>Anger tidpunkt när filen genererades. Anges i formatet HH:MM:SS.SSS.</xsd:documentation>
+							</xsd:annotation>
+							<!--Time when the file was created.-->
+						</xsd:attribute>
+						<xsd:attribute name="comment" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Fri kommentar kring filen.</xsd:documentation>
+							</xsd:annotation>
+							<!--Free annotation about the file contents.-->
+						</xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Company">
+					<xsd:annotation>
+						<xsd:documentation>Innehåller generell information om företaget eller organisationen som skapat filen.</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:attribute name="id" type="xsd:string" use="required">
+							<xsd:annotation>
+								<xsd:documentation>Identitet på avsändade företag. Ett flertal system, främst redovisningssystem, använder en intern identitet för att avgöra vilket företag som avses. Kan vara ett nummer eller ett smeknamn. Identiteten är viktig för att programvarorna med säkerhet skall kunna synkronisera informationen.</xsd:documentation>
+							</xsd:annotation>
+							<!--Internal code for the exported company from the exporting program.-->
+						</xsd:attribute>
+						<xsd:attribute name="name" type="xsd:string" use="required">
+							<xsd:annotation>
+								<xsd:documentation>Avsändande företags/organisations juridiska namn i klartext.</xsd:documentation>
+							</xsd:annotation>
+							<!--Full name for the exported company.-->
+						</xsd:attribute>
+						<xsd:attribute name="organizationalnumber" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Företagets organisationsnr.</xsd:documentation>
+							</xsd:annotation>
+							<!--Organizational number. For non-swedish companys should the national organizational number for the company/organization be here.-->
+						</xsd:attribute>
+						<xsd:attribute name="contact" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Kontaktperson hos det avsändande företaget.</xsd:documentation>
+							</xsd:annotation>
+							<!--Name of the contact in the company.-->
+						</xsd:attribute>
+						<xsd:attribute name="addressLine1" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Adressrad 1, t ex gatuadress.</xsd:documentation>
+							</xsd:annotation>
+							<!--One line of address information.-->
+						</xsd:attribute>
+						<xsd:attribute name="addressLine2" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Adressrad 2, t ex postbox.</xsd:documentation>
+							</xsd:annotation>
+							<!--Second line of address information.-->
+						</xsd:attribute>
+						<xsd:attribute name="postcode" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Postnummer.</xsd:documentation>
+							</xsd:annotation>
+							<!--The postal code.-->
+						</xsd:attribute>
+						<xsd:attribute name="city" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Postort.</xsd:documentation>
+							</xsd:annotation>
+							<!--Postal city.-->
+						</xsd:attribute>
+						<xsd:attribute name="state" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Region eller stat.</xsd:documentation>
+							</xsd:annotation>
+							<!--The state or region where the company is located.-->
+						</xsd:attribute>
+						<xsd:attribute name="country" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Land i klartext.</xsd:documentation>
+							</xsd:annotation>
+							<!--Country in plain language.-->
+						</xsd:attribute>
+						<xsd:attribute name="countryCode">
+							<xsd:annotation>
+								<xsd:documentation>Landkod. Skall anges enligt kodlista ISO 3166-1.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:length value="2"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+							<!--Two letters country code according to the ISO 3166 standard for country codes.-->
+						</xsd:attribute>
+						<xsd:attribute name="telephone" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Telefonnr</xsd:documentation>
+							</xsd:annotation>
+							<!--Full telephone number.-->
+						</xsd:attribute>
+						<xsd:attribute name="fax" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Faxnr.</xsd:documentation>
+							</xsd:annotation>
+							<!--Full fax number.-->
+						</xsd:attribute>
+						<xsd:attribute name="email" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Avsändande företags e-post adress.</xsd:documentation>
+							</xsd:annotation>
+							<!--E-mail address.-->
+						</xsd:attribute>
+						<xsd:attribute name="homepage" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Avsändande företags hemsida.</xsd:documentation>
+							</xsd:annotation>
+							<!--Full home page address.-->
+						</xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Currency" type="CurrencyIdTYPE" default="SEK" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Anger redovisningsvaluta. Alla belopp som avser redovisning skall vara angivna i denna valuta.
+</xsd:documentation>
+						<xsd:documentation>För fakturorna i kund- och leverantörsreskontran kan även beloppen anges i ursprungsvalutan.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Accounting" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Innehåller redovisningsinformation. Konton, ingående- och utgående balanser, saldon, budget och transaktioner.
+</xsd:documentation>
+						<xsd:documentation>Detta element motsvarar till största del innehållet i SIE filformat från 1998.</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="Accounts">
+								<xsd:annotation>
+									<xsd:documentation>Konton. Skall innehålla samtliga konton som används i filen.
+</xsd:documentation>
+									<xsd:documentation/>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="Account" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>Deklarerar ett konto. Om importerande program inte har motsvarande konto upplagt skall det lägga upp det.</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="Id" type="AccountIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Kontonr.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="Name" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Kontonamn</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="Type" type="AccountTypeTYPE" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Kontotyp enligt kodlista</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="SruCode" minOccurs="0" maxOccurs="unbounded">
+														<xsd:annotation>
+															<xsd:documentation>Kontots SRU-kod</xsd:documentation>
+														</xsd:annotation>
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:integer">
+																	<xsd:attribute name="number" use="optional">
+																		<xsd:annotation>
+																			<xsd:documentation>Anger SRU-kodens interna representation, normalt 1-3.</xsd:documentation>
+																		</xsd:annotation>
+																		<xsd:simpleType>
+																			<xsd:restriction base="xsd:integer">
+																				<xsd:totalDigits value="3"/>
+																			</xsd:restriction>
+																		</xsd:simpleType>
+																	</xsd:attribute>
+																</xsd:extension>
+															</xsd:simpleContent>
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="chartOfAccountsType" use="optional">
+										<xsd:annotation>
+											<xsd:documentation>Anger vilken kontoplan som används. Om annan än de fördefinierade används skall attributet sättas till OTHER och namnet på kontoplanen anges i attributet nameOfChartOfAccounts.</xsd:documentation>
+										</xsd:annotation>
+										<xsd:simpleType>
+											<xsd:restriction base="xsd:NMTOKEN">
+												<xsd:enumeration value="BAS95"/>
+												<xsd:enumeration value="BAS96"/>
+												<xsd:enumeration value="EUBAS97"/>
+												<xsd:enumeration value="BAS2000"/>
+												<xsd:enumeration value="OTHER"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:attribute>
+									<xsd:attribute name="nameOfChartOfAccounts" type="xsd:string" use="optional">
+										<xsd:annotation>
+											<xsd:documentation>Namn på kontoplan. Behöver endast anges om den skiljer sig från någon av de fördefinierade.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:attribute>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="TypeOfObjectGroups" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Dimensionstyper. Skall innehålla alla typer som används i filen.</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="TypeOfObjectGroup" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>Deklarerar en dimensionstyp.</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="Id" type="TypeOfObjectGroupIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Identitet för dimensionstypen</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="Name" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Namn på dimensionstypen</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+								<!--Contains information about which type of object group it is.-->
+							</xsd:element>
+							<xsd:element name="ObjectGroups" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Dimensioner. SKall innehålla alla dimensioner som används i filen.</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="ObjectGroup" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>Deklarerar en dimension.</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="Id" type="ObjectGroupIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Identitet för dimensionen</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="Name" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Namn på dimensionen</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="TypeOfObjectGroupId" type="TypeOfObjectGroupIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Anger typ av dimension. Skall motsvaras av ett element i TypeOfObjectGroup med detta identitet.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="TypeOfObjects" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Objektstyper. Skall innehålla alla typer som används i filen.</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="TypeOfObject" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>Deklarerar en objektstyp.</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="Id" type="TypeOfObjectIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Identitet för objektstypen</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="Name" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Namn på objektstypen</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+								<!--Contains information about which type of object it is.-->
+							</xsd:element>
+							<xsd:element name="Objects" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Objekt. Skall innehålla alla objekt som används i filen.</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="Object" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>Deklarerar ett objekt</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="Id" type="ObjectIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Identitet för objektet</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="Name" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Namn på objektet</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="TypeOfObjectId" type="TypeOfObjectIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Anger typ av objekt. Skall motsvaras av ett element i TypeOfObject med denna identitet.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="FinancialYears">
+								<xsd:annotation>
+									<xsd:documentation>Redovisningsinformation. </xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="FinancialYear" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>Innehåller redovisningsinformation för ett räkenskapsår.</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="Journals" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Verifikationer</xsd:documentation>
+														</xsd:annotation>
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="Journal" maxOccurs="unbounded">
+																	<xsd:annotation>
+																		<xsd:documentation>Delmängd av verifikationer, t ex verifikationsserie. Om exporterande program hanterar olika serier skall det skapas ett element av denna typ för varje serie.</xsd:documentation>
+																	</xsd:annotation>
+																	<xsd:complexType>
+																		<xsd:sequence>
+																			<xsd:element name="Id" type="xsd:string" minOccurs="0">
+																				<xsd:annotation>
+																					<xsd:documentation>Verifikationsserie. Om det utelämnas kan importerande program sätta serien.</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:element>
+																			<xsd:element name="Name" type="xsd:string" minOccurs="0">
+																				<xsd:annotation>
+																					<xsd:documentation>Namn på verifikationsserien</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:element>
+																			<xsd:element name="JournalEntry" maxOccurs="unbounded">
+																				<xsd:annotation>
+																					<xsd:documentation>En verifikation. Verifikationerna skall läggas i stigande nummerordning inom serien.</xsd:documentation>
+																				</xsd:annotation>
+																				<xsd:complexType>
+																					<xsd:sequence>
+																						<xsd:element name="Id" type="xsd:string" minOccurs="0">
+																							<xsd:annotation>
+																								<xsd:documentation>Verifikationsnummer. Om det utelämnas kan importerande program sätta verifikationsnumret.</xsd:documentation>
+																							</xsd:annotation>
+																						</xsd:element>
+																						<xsd:element name="Date" type="xsd:date">
+																							<xsd:annotation>
+																								<xsd:documentation>Verifikationsdatum</xsd:documentation>
+																							</xsd:annotation>
+																						</xsd:element>
+																						<xsd:element name="Text" type="xsd:string" minOccurs="0">
+																							<xsd:annotation>
+																								<xsd:documentation>Verifikationstext</xsd:documentation>
+																							</xsd:annotation>
+																						</xsd:element>
+																						<xsd:element name="LedgerEntry" maxOccurs="unbounded">
+																							<xsd:annotation>
+																								<xsd:documentation>En verifikationsrad</xsd:documentation>
+																							</xsd:annotation>
+																							<xsd:complexType>
+																								<xsd:complexContent>
+																									<xsd:extension base="LedgerEntryTYPE">
+																										<xsd:attribute name="revoked" type="xsd:boolean" use="optional" default="false">
+																											<xsd:annotation>
+																												<xsd:documentation>Anger om verifikationsraden är struken. Ange True eller 1 om raden är struken. Om utelämnad betraktas raden som ej struken.</xsd:documentation>
+																											</xsd:annotation>
+																										</xsd:attribute>
+																										<xsd:attribute name="revokedBy" type="xsd:string" use="optional">
+																											<xsd:annotation>
+																												<xsd:documentation>Om raden är struken kan detta attribut användas för att m h a signatur eller motsvarande ange vem som strukit raden.</xsd:documentation>
+																											</xsd:annotation>
+																										</xsd:attribute>
+																									</xsd:extension>
+																								</xsd:complexContent>
+																							</xsd:complexType>
+																						</xsd:element>
+																					</xsd:sequence>
+																				</xsd:complexType>
+																			</xsd:element>
+																		</xsd:sequence>
+																	</xsd:complexType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element name="OpeningBalances" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Ingående balanser.</xsd:documentation>
+														</xsd:annotation>
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="OpeningBalance" maxOccurs="unbounded">
+																	<xsd:annotation>
+																		<xsd:documentation>Innehåller den ingående balansen för ett balanskonto.</xsd:documentation>
+																	</xsd:annotation>
+																	<xsd:complexType>
+																		<xsd:group ref="BalanceGROUP"/>
+																	</xsd:complexType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element name="Balances" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Saldon</xsd:documentation>
+														</xsd:annotation>
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="Balance" type="BalanceWithPeriodTYPE" maxOccurs="unbounded">
+																	<xsd:annotation>
+																		<xsd:documentation>Ett saldo</xsd:documentation>
+																	</xsd:annotation>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element name="Budgets" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Budgetar</xsd:documentation>
+														</xsd:annotation>
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="Budget" maxOccurs="unbounded">
+																	<xsd:annotation>
+																		<xsd:documentation>En budget</xsd:documentation>
+																	</xsd:annotation>
+																	<xsd:complexType>
+																		<xsd:sequence>
+																			<xsd:element name="Id" minOccurs="0">
+																				<xsd:annotation>
+																					<xsd:documentation>Identitet för budgeten</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:element>
+																			<xsd:element name="Name" type="xsd:string" minOccurs="0">
+																				<xsd:annotation>
+																					<xsd:documentation>Budgetens namn</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:element>
+																			<xsd:element name="BudgetEntry" type="BalanceWithPeriodTYPE" maxOccurs="unbounded">
+																				<xsd:annotation>
+																					<xsd:documentation>En budgetrad</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:element>
+																		</xsd:sequence>
+																		<xsd:attribute name="BudgetID" type="xsd:string"/>
+																		<xsd:attribute name="BudgetName" type="xsd:string"/>
+																	</xsd:complexType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element name="ClosingBalances" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation xml:lang="SE">Utgående balanser</xsd:documentation>
+															<xsd:documentation/>
+															<xsd:documentation>rad 3</xsd:documentation>
+														</xsd:annotation>
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="ClosingBalance" maxOccurs="unbounded">
+																	<xsd:annotation>
+																		<xsd:documentation>En utgående balans för ett konto</xsd:documentation>
+																	</xsd:annotation>
+																	<xsd:complexType>
+																		<xsd:group ref="BalanceGROUP"/>
+																	</xsd:complexType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+												<xsd:attribute name="start" type="xsd:date" use="required">
+													<xsd:annotation>
+														<xsd:documentation>Räkenskapsårets startdatum. Anges i formatet CCYY-MM-DD.</xsd:documentation>
+													</xsd:annotation>
+												</xsd:attribute>
+												<xsd:attribute name="end" type="xsd:date" use="required">
+													<xsd:annotation>
+														<xsd:documentation>Räkenskapsårets slutdatum. Anges i formatet CCYY-MM-DD.</xsd:documentation>
+													</xsd:annotation>
+												</xsd:attribute>
+												<xsd:attribute name="isClosed" type="xsd:boolean" default="false">
+													<xsd:annotation>
+														<xsd:documentation>Anger om räkenskapsåret är avslutat. Ange True alt 1 för att sätta det som avslutat. Om utelämnat betraktas räkenskapsåret som ej avslutat.</xsd:documentation>
+													</xsd:annotation>
+												</xsd:attribute>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="AccountsPayable" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Innehåller information från leverantörsreskontran. Leverantörer, fakturor och betalningar.</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="Suppliers">
+								<xsd:annotation>
+									<xsd:documentation>Leverantörer</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="Supplier" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>En leverantör</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="SupplierId" type="SupplierIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Leverantörens identitet, t ex leverantörsnr</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="SupplierName" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Leverantörens namn</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="SupplierOrganizationalNumber" type="xsd:string" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Leverantörens organisationsnr</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="SubNumber" type="xsd:string" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Tilläggsnummer för en leverantör. Används för att särskilja flera förekomster av samma leverantör.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="Invoices">
+								<xsd:annotation>
+									<xsd:documentation>Leverantörsfakturor</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="Invoice" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>En leverantörsfaktura</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="SupplierId" type="SupplierIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Leverantörsnr</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="InvoiceType" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Fakturatyp</xsd:documentation>
+														</xsd:annotation>
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:NMTOKEN">
+																<xsd:enumeration value="DEBIT"/>
+																<xsd:enumeration value="CREDIT"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+														<!--Defines which type of invoice it is. Systems that don't arbitrate between RANTEFAKTURA and FAKTURA should use the type FAKTURA.-->
+													</xsd:element>
+													<xsd:element name="InvoiceNumber" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Fakturanummer</xsd:documentation>
+														</xsd:annotation>
+														<!--The unique identification of an invoice.-->
+													</xsd:element>
+													<xsd:element name="InvoiceDate" type="xsd:date">
+														<xsd:annotation>
+															<xsd:documentation>Fakturadatum</xsd:documentation>
+														</xsd:annotation>
+														<!--Invoice date.-->
+													</xsd:element>
+													<xsd:element name="DueDate" type="xsd:date" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Förfallodatum</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="InternalId" type="xsd:string" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Intern identitet av fakturan</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="ArrivalDate" type="xsd:date" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Ankomstdatum</xsd:documentation>
+														</xsd:annotation>
+														<!--Arrival date.-->
+													</xsd:element>
+													<xsd:element name="RegistredDate" type="xsd:date" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Registeringsdatum</xsd:documentation>
+														</xsd:annotation>
+														<!--Registred date.-->
+													</xsd:element>
+													<xsd:element name="ApprovalSign" type="xsd:string" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Attesterad av</xsd:documentation>
+														</xsd:annotation>
+														<!--Defines who approved the invoice-->
+													</xsd:element>
+													<xsd:element name="GrossAmount" type="xsd:decimal">
+														<xsd:annotation>
+															<xsd:documentation>Totalbelopp. ANges i redovisningsvaluta.</xsd:documentation>
+														</xsd:annotation>
+														<!--Gross amount-->
+													</xsd:element>
+													<xsd:element name="VatAmount" type="xsd:decimal" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Momsbelopp. Anges i redovisningsvaluta.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="GrossAmountInCurrency" type="xsd:decimal" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Totalbelopp i ursprungsvaluta. Om utelämnat används GrossAmount.</xsd:documentation>
+														</xsd:annotation>
+														<!--Gross amount in foreign currency.-->
+													</xsd:element>
+													<xsd:element name="VatAmountInCurrency" type="xsd:decimal" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Momsbelopp i ursprungsvaluta. Om utelämnat används VatAmount</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="CurrencyId" type="CurrencyIdTYPE" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Valutakod</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="Payment" type="PaymentTYPE" minOccurs="0" maxOccurs="unbounded">
+														<xsd:annotation>
+															<xsd:documentation>En betalningshändelse. Kan förekomma obegränsat antal gånger.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="JournalInfo" type="JournalInfoTYPE" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Verifikationshänvisning</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="AccountsReceivable" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Innehåller information från kundreskontran. Kunder, fakturor och betalningar.</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="Customers">
+								<xsd:annotation>
+									<xsd:documentation>Kunder</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="Customer" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>En kund</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="CustomerId" type="CustomerIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Kundens identitet, t ex kundnr</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="CustomerName" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Kundens namn</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="CustomerOrganizationalNumber" type="xsd:string" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Kundens organisationsnr</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="SubNumber" type="xsd:string" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Tilläggsnummer för en kund. Används för att särskilja flera förekomster av samma kund.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="Invoices">
+								<xsd:annotation>
+									<xsd:documentation>Kundfakturor</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="Invoice" maxOccurs="unbounded">
+											<xsd:annotation>
+												<xsd:documentation>En kundfaktura</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="CustomerId" type="CustomerIdTYPE">
+														<xsd:annotation>
+															<xsd:documentation>Kundens identitet</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="InvoiceType" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Fakturatyp</xsd:documentation>
+														</xsd:annotation>
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:NMTOKEN">
+																<xsd:enumeration value="DEBIT"/>
+																<xsd:enumeration value="CREDIT"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element name="InvoiceDate" type="xsd:date">
+														<xsd:annotation>
+															<xsd:documentation>Fakturadatum</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="RegistredDate" type="xsd:date" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Registreringsdatum</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="InvoiceNumber" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>Fakturanummer</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="GrossAmount" type="xsd:decimal">
+														<xsd:annotation>
+															<xsd:documentation>Totalbelopp. Anges i redovisningsvaluta.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="VatAmount" type="xsd:decimal" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Momsbelopp. Anges i redovisningsvaluta.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="GrossAmountInCurrency" type="xsd:decimal" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Totalbelopp i ursprungsvaluta. Om utelämnat används GrossAmount.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="VatAmountInCurrency" type="xsd:decimal" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Momsbelopp i ursprungsvaluta. Om utelämnat används VatAmount.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="CurrencyId" type="CurrencyIdTYPE" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Valutakod</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="Payment" type="PaymentTYPE" minOccurs="0" maxOccurs="unbounded">
+														<xsd:annotation>
+															<xsd:documentation>Betalningshändelse. Kan förekomma obegränsat antal gånger.</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+													<xsd:element name="JournalInfo" type="JournalInfoTYPE" minOccurs="0">
+														<xsd:annotation>
+															<xsd:documentation>Verifikationshänvisning</xsd:documentation>
+														</xsd:annotation>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="SIEType">
+				<xsd:annotation>
+					<xsd:documentation>Anger vilken typ av information som filen innehåller. 
+
+BALANCES = Konto, Ingående balans, Utgående balans, Periodsaldo (objekt frivilligt)
+TRANSACTIONS - Konto, Ingående balans, Utgående balans, Verifikationer, Periodsaldo, Leverantörsreskontra, Kundreskontra
+LEDGERENTRIES - Verifikationer</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="BALANCES"/>
+						<xsd:enumeration value="TRANSACTIONS"/>
+						<xsd:enumeration value="LEDGERENTRIES"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+				<!--The unique identification of the contents of the SIE-file. All files must contain Fileinfo, Company and optionally Currency. Following numbers are reserved; 1 contains OpeningBalances and Closing Balances for accounts (not for Objects/Object groups). 2 contains OpeningBalances, Closing Balances, Budget and Balances for accounts (not for Objects/Object groups). 3 contains OpeningBalances, Closing Balances, Budget and Balances for accounts, Objects and Object groups. 4 contains OpeningBalances, Closing Balances, Budget, Balances and Journal for accounts, Objects and Object groups. 5 contains Suppliers. 6 contains Suppliers, Invoices and Payments. By combining number 1, 2, 3 or 4 with number 5 or 6 you get a type that contains data both from the accounting and supplier part. I. e. number 25 contains contains OpeningBalances, Closing Balances, Budget and Balances for accounts (not for Objects/Object groups) plus Suppliers.-->
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:simpleType name="AccountIdTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för ett kontonr</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<!--<xsd:minLength value="1"/>-->
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AccountTypeTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en kontotyp</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NMTOKEN">
+			<xsd:enumeration value="ASSET"/>
+			<xsd:enumeration value="LIABILITY"/>
+			<xsd:enumeration value="INCOME"/>
+			<xsd:enumeration value="COST"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:group name="BalanceGROUP">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en saldopost</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AccountId" type="AccountIdTYPE" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Kontonr</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Amount" type="xsd:decimal">
+				<xsd:annotation>
+					<xsd:documentation>Belopp. Positivt för debet och negativt för kredit.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Quantity" type="xsd:decimal" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Kvantitet</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Unit" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Enhet</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ObjectGroup" type="ObjectGroupReferenceTYPE" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Dimension</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Object" type="ObjectReferenceTYPE" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Objekt</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:complexType name="BalanceWithPeriodTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en saldopost för en viss period</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Period" type="PeriodTYPE">
+				<xsd:annotation>
+					<xsd:documentation>Bokföringsperiod. Anges i formatet YYMM</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:group ref="BalanceGROUP"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="CurrencyIdTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en valutakod. Anges enligt kodlista ISO 4217.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:token">
+			<xsd:length value="3"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CustomerIdTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en kundidentitet</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="JournalInfoTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en referens till en verifikationspost</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="FinancialYear" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Räkenskapsår. Anges med räkenskapsårets startdatum</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="JournalId" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Verifikationsserie</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="JournalEntryId" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Verifikationsnummer</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="JournalDate" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Verifikationsdatum</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LedgerEntryTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en transaktionspost</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AccountId" type="AccountIdTYPE">
+				<xsd:annotation>
+					<xsd:documentation>Kontonr. Kontot skall vara deklarerat under elementet Accounts.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Amount" type="xsd:decimal">
+				<xsd:annotation>
+					<xsd:documentation>Belopp. Positivt för debet och negativt för kredit.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="RegistredDate" type="xsd:date" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Registreringsdatum</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="RegistredBy" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Registrerad av</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Text" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Transaktionstext</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Date" type="xsd:date" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Transaktionsdatum. Om utelämnat används verifikationens datum.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Quantity" type="xsd:decimal" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Kvantitet. Anges normalt med samma tecken som för beloppet.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Unit" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Enhet för kvantiteten.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ObjectGroup" type="ObjectGroupReferenceTYPE" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Dimension</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Object" type="ObjectReferenceTYPE" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Objekt</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="ObjectGroupIdTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en dimensionsidentitet</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="ObjectGroupReferenceTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en angivelse av en dimension</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TypeOfObjectGroupId" type="TypeOfObjectGroupIdTYPE">
+				<xsd:annotation>
+					<xsd:documentation>Typ av dimension</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ObjectGroupId" type="ObjectGroupIdTYPE">
+				<xsd:annotation>
+					<xsd:documentation>Dimensionens identitet</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="ObjectIdTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en objektidentitet</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="ObjectReferenceTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en angivelse av ett objekt</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TypeOfObjectId" type="TypeOfObjectIdTYPE">
+				<xsd:annotation>
+					<xsd:documentation>Typ av objekt</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ObjectId" type="ObjectIdTYPE">
+				<xsd:annotation>
+					<xsd:documentation>Objektets identitet</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="TypeOfObjectIdTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en objektidentitet</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="PaymentTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en betalningshändelse</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AssignmentDate" type="xsd:date" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Beordringsdatum</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PaymentDate" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Betalningsdatum</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Amount" type="xsd:decimal">
+				<xsd:annotation>
+					<xsd:documentation>Belopp. Anges i redovisningsvaluta.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AmountInCurrency" type="xsd:decimal" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Belopp i ursprungsvaluta.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CurrencyId" type="CurrencyIdTYPE" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Valutakod</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ReceiverReference" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Betalningsmottagarens referens</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SenderReference" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Betalningsavsändarens referens</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IntermediaryReference" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Betalningsförmedlarens referens</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ModeOfPayment">
+				<xsd:annotation>
+					<xsd:documentation>Betalningssätt</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="POSTALGIRO"/>
+						<xsd:enumeration value="BANKGIRO"/>
+						<xsd:enumeration value="DEPOSIT"/>
+						<xsd:enumeration value="CHECK"/>
+						<xsd:enumeration value="CASH"/>
+						<xsd:enumeration value="SETTLEMENT"/>
+						<xsd:enumeration value="IBAN"/>
+						<xsd:enumeration value="UNKNOWN"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="AccountNumber" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Kontonr som betalningen utfördes till eller från</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AdditionalInfo" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Tilläggsinfo</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="JournalInfo" type="JournalInfoTYPE" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Verifikationshänvisning</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="PeriodTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinition för en bokföringsperiod. Period anger kalandermånad inom räkenskapsåret. Period 1 är lika med första månaden i räkenskapsåret. Period 0 avser hela året.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="0"/>
+			<xsd:totalDigits value="2"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SupplierIdTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinititon för en leverantörsidentitet</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TypeOfObjectGroupIdTYPE">
+		<xsd:annotation>
+			<xsd:documentation>Typdefinititon för en dimensionstypsidentitet</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="SIE" type="SIEType"/>
+  <xs:complexType name="LedgerEntryType">
+    <xs:sequence>
+      <xs:element type="xs:int" name="AccountId"/>
+      <xs:element type="xs:float" name="Amount"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CompanyType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="organizationalnumber"/>
+        <xs:attribute type="xs:string" name="addressLine1"/>
+        <xs:attribute type="xs:string" name="postcode"/>
+        <xs:attribute type="xs:string" name="city"/>
+        <xs:attribute type="xs:string" name="countryCode"/>
+        <xs:attribute type="xs:anyURI" name="homepage"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="FinancialYearsType">
+    <xs:sequence>
+      <xs:element type="FinancialYearType" name="FinancialYear"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="JournalInfoType">
+    <xs:sequence>
+      <xs:element type="xs:date" name="FinancialYear"/>
+      <xs:element type="xs:string" name="JournalId"/>
+      <xs:element type="xs:short" name="JournalEntryId"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SuppliersType">
+    <xs:sequence>
+      <xs:element type="SupplierType" name="Supplier" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AccountsType">
+    <xs:sequence>
+      <xs:element type="AccountType" name="Account" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="JournalEntryType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Id"/>
+      <xs:element type="LedgerEntryType" name="LedgerEntry" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="JournalType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Id"/>
+      <xs:element type="xs:string" name="Name"/>
+      <xs:element type="JournalEntryType" name="JournalEntry" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="JournalsType">
+    <xs:sequence>
+      <xs:element type="JournalType" name="Journal" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InvoiceType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="SupplierId"/>
+      <xs:element type="xs:string" name="InternalId"/>
+      <xs:element type="xs:float" name="GrossAmount"/>
+      <xs:element type="JournalInfoType" name="JournalInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SIEType">
+    <xs:sequence>
+      <xs:element type="CompanyType" name="Company"/>
+      <xs:element type="xs:string" name="Currency"/>
+      <xs:element type="AccountingType" name="Accounting"/>
+      <xs:element type="AccountsPayableType" name="AccountsPayable"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SupplierType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="SupplierId"/>
+      <xs:element type="xs:string" name="SupplierName"/>
+      <xs:element type="xs:string" name="SupplierOrganizationalNumber"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AccountsPayableType">
+    <xs:sequence>
+      <xs:element type="SuppliersType" name="Suppliers"/>
+      <xs:element type="InvoicesType" name="Invoices"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AccountingType">
+    <xs:sequence>
+      <xs:element type="AccountsType" name="Accounts"/>
+      <xs:element type="FinancialYearsType" name="FinancialYears"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InvoicesType">
+    <xs:sequence>
+      <xs:element type="InvoiceType" name="Invoice" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FinancialYearType">
+    <xs:sequence>
+      <xs:element type="JournalsType" name="Journals"/>
+    </xs:sequence>
+    <xs:attribute type="xs:date" name="start"/>
+    <xs:attribute type="xs:date" name="end"/>
+  </xs:complexType>
+  <xs:complexType name="AccountType">
+    <xs:sequence>
+      <xs:element type="xs:int" name="Id"/>
+      <xs:element type="xs:string" name="Name"/>
+      <xs:element type="xs:string" name="Type"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
