@@ -1,4 +1,4 @@
-package se.kodapan.clients.sambruk;
+package se.sambruk.xmlsie;
 
 import junit.framework.Assert;
 import org.junit.Test;

@@ -15,7 +15,7 @@
 
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>se.sambruk.sie.rest.ApplicationConfig</param-value>
+      <param-value>se.sambruk.xmlsie.rest.ApplicationConfig</param-value>
     </init-param>
 
   </servlet>
