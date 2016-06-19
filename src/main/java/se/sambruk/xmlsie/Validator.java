@@ -162,9 +162,11 @@ public class Validator {
         } else {
           for (Journal journal : financialYear.getJournals().getJournal()) {
 
-            // todo sanity check text
-            // todo check id
-
+            if (journal.getName() == null) {
+              validationErrors.add("Missing <Journal><Name>, expected to be the payee.");
+            } else if (journal.getName().trim().isEmpty()) {
+              validationErrors.add("Empty <Journal><Name>, expected to be the payee.");
+            }
 
             if (journal.getJournalEntry() == null || journal.getJournalEntry().isEmpty()) {
               validationErrors.add("Missing or empty <SIE><Accounting><FinancialYears><Journals><Journal><JournalEntry> records");
@@ -172,7 +174,15 @@ public class Validator {
             } else {
               for (JournalEntry journalEntry : journal.getJournalEntry()) {
 
-                // todo sanity check dates
+                if (journalEntry.getDate() != null) {
+                  if (journalEntry.getDate().toGregorianCalendar().getTimeInMillis() < financialYear.getStart().toGregorianCalendar().getTimeInMillis()) {
+                    validationErrors.add("Journal entry date is less than financial year start in " + marshall(journalEntry));
+                  }
+                  if (journalEntry.getDate().toGregorianCalendar().getTimeInMillis() > financialYear.getEnd().toGregorianCalendar().getTimeInMillis()) {
+                    validationErrors.add("Journal entry date is greater than financial year end in " + marshall(journalEntry));
+                  }
+                }
+
                 // todo sanity check text
 
                 if (journalEntry.getLedgerEntry() == null || journalEntry.getLedgerEntry().isEmpty()) {
@@ -187,7 +197,15 @@ public class Validator {
 
                     }
 
-                    // todo sanity check dates
+                    if (ledgerEntry.getDate() != null) {
+                      if (ledgerEntry.getDate().toGregorianCalendar().getTimeInMillis() < financialYear.getStart().toGregorianCalendar().getTimeInMillis()) {
+                        validationErrors.add("Ledger entry date is less than financial year start in " + marshall(ledgerEntry));
+                      }
+                      if (ledgerEntry.getDate().toGregorianCalendar().getTimeInMillis() > financialYear.getEnd().toGregorianCalendar().getTimeInMillis()) {
+                        validationErrors.add("Ledger entry date is greater than financial year end in " + marshall(ledgerEntry));
+                      }
+                    }
+
                     // todo sanity check text
 
                   }
@@ -279,9 +297,7 @@ public class Validator {
 
   private String marshall(Object object) throws JAXBException {
     StringWriter out = new StringWriter(4096);
-
     JAXBContext.newInstance(SIE.class).createMarshaller().marshal(new JAXBElement(new QName(null, object.getClass().getSimpleName()), object.getClass(), object), out);
-
     return out.toString();
   }
 
