@@ -10,7 +10,7 @@ import java.util.*;
  * @author kalle
  * @since 2016-09-02 21:10
  */
-public class SingleSoleTraderAnonymizer  implements Anonymizer {
+public class SingleSoleTraderAnonymizer  extends Anonymizer {
 
   private String soleTraderSupplierName = "Anonymized sole traders";
   private String soleTraderSupplierIdentity = "SOLE_TRADERS";

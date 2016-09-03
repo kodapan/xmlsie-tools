@@ -6,12 +6,17 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import se.sambruk.xmlsie.Validator;
+import se.sambruk.xmlsie.anonymizer.Anonymizer;
+import se.sambruk.xmlsie.anonymizer.SingleSoleTraderAnonymizer;
 import se.sambruk.xmlsie.orebro.Converter;
+import se.sie.xml.SIE;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import java.io.*;
 
 /**
@@ -90,6 +95,31 @@ public class Version_1_0_0 {
       }
     }
     return response.toString();
+
+  }
+
+  @Path("anonymize")
+  @Produces(MediaType.TEXT_XML)
+  @POST
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  public String anonymize(
+      @FormDataParam("file") InputStream uploadedInputStream,
+      @FormDataParam("file") FormDataContentDisposition fileDetail
+  ) throws Exception {
+
+    Anonymizer anonymizer = new SingleSoleTraderAnonymizer();
+    SIE sie = anonymizer.anonymize(new InputStreamReader(uploadedInputStream, "UTF8"));
+
+    JAXBContext jaxbContext = JAXBContext.newInstance(SIE.class);
+    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+    // output pretty printed
+    jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+    StringWriter output = new StringWriter();
+    jaxbMarshaller.marshal(sie, output);
+    return output.toString();
 
   }
 
