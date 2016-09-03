@@ -102,7 +102,7 @@ public class Version_1_0_0 {
   @Produces(MediaType.TEXT_XML)
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  public String anonymize(
+  public Response anonymize(
       @FormDataParam("file") InputStream uploadedInputStream,
       @FormDataParam("file") FormDataContentDisposition fileDetail
   ) throws Exception {
@@ -117,9 +117,22 @@ public class Version_1_0_0 {
     jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-    StringWriter output = new StringWriter();
+    final StringWriter output = new StringWriter();
     jaxbMarshaller.marshal(sie, output);
-    return output.toString();
+
+    StreamingOutput stream = new StreamingOutput() {
+      @Override
+      public void write(OutputStream os)
+          throws IOException, WebApplicationException {
+        Writer writer = new OutputStreamWriter(os, "UTF8");
+        writer.write(output.toString());
+        writer.flush();
+      }
+    };
+
+    return Response.ok(stream)
+        .header("Content-Disposition", "attachment; filename=\"" + fileDetail.getFileName() + "anonymized.sie.xml\"")
+        .build();
 
   }
 
