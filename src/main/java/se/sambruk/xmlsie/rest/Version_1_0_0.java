@@ -130,8 +130,14 @@ public class Version_1_0_0 {
       }
     };
 
+    String responseFileName = fileDetail.getFileName();
+    if (responseFileName.toLowerCase().endsWith(".sie.xml")) {
+      responseFileName = responseFileName.substring(0, responseFileName.length() - ".sie.xml".length());
+    }
+    responseFileName += ".anonymized.sie.xml";
+
     return Response.ok(stream)
-        .header("Content-Disposition", "attachment; filename=\"" + fileDetail.getFileName() + "anonymized.sie.xml\"")
+        .header("Content-Disposition", "attachment; filename=\"" + responseFileName + "\"")
         .build();
 
   }
