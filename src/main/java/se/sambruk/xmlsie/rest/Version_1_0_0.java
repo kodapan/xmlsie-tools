@@ -9,6 +9,7 @@ import se.sambruk.xmlsie.Validator;
 import se.sambruk.xmlsie.anonymizer.Anonymizer;
 import se.sambruk.xmlsie.anonymizer.SingleSoleTraderAnonymizer;
 import se.sambruk.xmlsie.orebro.XLSX2XMLSIEConverter;
+import se.sambruk.xmlsie.orebro.XMLSIE2XLSXConverter;
 import se.sie.xml.SIE;
 
 import javax.ws.rs.*;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.*;
+import java.net.URLEncoder;
 
 /**
  * @author kalle
@@ -26,11 +28,11 @@ import java.io.*;
 @Path("1.0.0")
 public class Version_1_0_0 {
 
-  @Path("convert")
+  @Path("xlsx2xmlsie")
   @Produces(MediaType.TEXT_XML)
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  public Response convert(
+  public Response xlsx2xmlsie(
       @FormDataParam("file") final InputStream uploadedInputStream,
       @FormDataParam("file") final FormDataContentDisposition fileDetail
   ) throws Exception {
@@ -61,7 +63,43 @@ public class Version_1_0_0 {
       }
     };
     return Response.ok(stream)
-        .header("Content-Disposition", "attachment; filename=\"" + fileDetail.getFileName() + ".sie.xml\"")
+        .header("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileDetail.getFileName(), "UTF8") + ".sie.xml\"")
+        .build();
+
+
+  }
+
+  @Path("xmlsie2csv")
+  @Produces(MediaType.TEXT_PLAIN)
+  @POST
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  public Response xmlsie2csv(
+      @FormDataParam("file") final InputStream uploadedInputStream,
+      @FormDataParam("file") final FormDataContentDisposition fileDetail
+  ) throws Exception {
+
+    XMLSIE2XLSXConverter converter = new XMLSIE2XLSXConverter();
+    final StringWriter csv = new StringWriter();
+    converter.convert(new InputStreamReader(uploadedInputStream, "UTF8"), csv);
+
+    StreamingOutput stream = new StreamingOutput() {
+      @Override
+      public void write(OutputStream os)
+          throws IOException, WebApplicationException {
+        Writer writer = new OutputStreamWriter(os, "UTF8");
+        writer.write(csv.toString());
+        writer.flush();
+      }
+    };
+
+    String responseFileName = fileDetail.getFileName();
+    if (responseFileName.toLowerCase().endsWith(".sie.xml")) {
+      responseFileName = responseFileName.substring(0, responseFileName.length() - ".sie.xml".length());
+    }
+    responseFileName += ".csv";
+
+    return Response.ok(stream)
+        .header("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(responseFileName, "UTF8") + "\"")
         .build();
 
 
@@ -137,7 +175,7 @@ public class Version_1_0_0 {
     responseFileName += ".anonymized.sie.xml";
 
     return Response.ok(stream)
-        .header("Content-Disposition", "attachment; filename=\"" + responseFileName + "\"")
+        .header("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(responseFileName, "UTF8") + "\"")
         .build();
 
   }

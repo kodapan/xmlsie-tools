@@ -46,6 +46,13 @@ public class SingleSoleTraderAnonymizer  extends Anonymizer {
 
     sie.getAccountsPayable().getSuppliers().getSupplier().add(soleTraderSupplier);
 
+//    for (SIE.AccountsPayable.Suppliers.Supplier supplier : soleTraders.values()) {
+//      System.out.println(supplier.getSupplierOrganizationalNumber());
+//      if (supplier.getSupplierOrganizationalNumber().startsWith("55")) {
+//        System.currentTimeMillis();
+//      }
+//    }
+//
     sie.getAccountsPayable().getSuppliers().getSupplier().removeAll(soleTraders.values());
 
     for (SIE.AccountsPayable.Invoices.Invoice invoice : soleTraderInvoices) {
