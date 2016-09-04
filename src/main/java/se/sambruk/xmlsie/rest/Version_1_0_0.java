@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import se.sambruk.xmlsie.Validator;
 import se.sambruk.xmlsie.anonymizer.Anonymizer;
 import se.sambruk.xmlsie.anonymizer.SingleSoleTraderAnonymizer;
-import se.sambruk.xmlsie.orebro.Converter;
+import se.sambruk.xmlsie.orebro.XLSX2XMLSIEConverter;
 import se.sie.xml.SIE;
 
 import javax.ws.rs.*;
@@ -45,7 +45,7 @@ public class Version_1_0_0 {
         try {
           IOUtils.copy(uploadedInputStream, new FileOutputStream(file));
 
-          Converter converter = new Converter();
+          XLSX2XMLSIEConverter converter = new XLSX2XMLSIEConverter();
           try {
             converter.convertFromCSV(converter.convertXLS2CSV(file), writer);
           } catch (Exception e) {

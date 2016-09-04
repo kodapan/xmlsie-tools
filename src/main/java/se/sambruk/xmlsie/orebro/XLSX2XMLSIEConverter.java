@@ -25,9 +25,9 @@ import java.util.regex.Pattern;
  * @author kalle
  * @since 2016-06-12 21:18
  */
-public class Converter {
+public class XLSX2XMLSIEConverter {
 
-  private static Logger log = LoggerFactory.getLogger(Converter.class);
+  private static Logger log = LoggerFactory.getLogger(XLSX2XMLSIEConverter.class);
 
   public Reader convertXLS2CSV(File xlsFile) throws Exception {
     File csvPath = File.createTempFile(xlsFile.getName(), ".converted");
