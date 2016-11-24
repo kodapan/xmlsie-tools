@@ -64,7 +64,7 @@ public class XLSX2XMLSIEConverter {
 
 
     Map<Integer, Konto> konton = new HashMap<>();
-    Map<Integer, Faktura> fakturor = new HashMap<>();
+    Map<String, Faktura> fakturor = new HashMap<>();
     Map<String, Mottagare> mottagare = new HashMap<>();
 
     BufferedReader br = new BufferedReader(reader);
@@ -110,7 +110,7 @@ public class XLSX2XMLSIEConverter {
         mottagare.put(mottagaren.namn, mottagaren);
       }
 
-      int fakturanummer = Integer.valueOf(columns[3]);
+      String fakturanummer = columns[3];
       Faktura faktura = fakturor.get(fakturanummer);
       if (faktura == null) {
         faktura = new Faktura();
@@ -237,7 +237,7 @@ public class XLSX2XMLSIEConverter {
 
       SIE.AccountsPayable.Invoices.Invoice invoice = objectFactory.createSIEAccountsPayableInvoicesInvoice();
 
-      invoice.setInternalId(String.valueOf(faktura.nummer));
+      invoice.setInternalId(faktura.nummer);
       invoice.setGrossAmount(total);
       invoice.setSupplierId(suppliers.get(faktura.leverantörsorganisationsnummer).getSupplierId());
 
@@ -353,7 +353,7 @@ public class XLSX2XMLSIEConverter {
     private String leverantörsnamn;
     private String leverantörsorganisationsnummer;
 
-    private int nummer;
+    private String nummer;
     private List<Kontering> konteringar = new ArrayList<>();
 
 
