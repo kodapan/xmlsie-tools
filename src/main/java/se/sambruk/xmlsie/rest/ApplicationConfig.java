@@ -16,6 +16,7 @@ public class ApplicationConfig extends Application {
   public Set<Class<?>> getClasses() {
     Set<Class<?>> resources = new java.util.HashSet<>();
     resources.add(Version_1_0_0.class);
+    resources.add(Version_1_0_1.class);
     resources.add(MultiPartFeature.class);
     return resources;
   }
