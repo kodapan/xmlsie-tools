@@ -55,11 +55,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                 &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="organizationalnumber" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                 &lt;attribute name="organizationNumber" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                 &lt;attribute name="contact" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                 &lt;attribute name="addressLine1" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                 &lt;attribute name="addressLine2" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="postcode" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                 &lt;attribute name="postalCode" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                 &lt;attribute name="city" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                 &lt;attribute name="state" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                 &lt;attribute name="country" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -5924,11 +5924,11 @@ public class SIE {
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
      *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *       &lt;attribute name="organizationalnumber" type="{http://www.w3.org/2001/XMLSchema}string" />
+     *       &lt;attribute name="organizationNumber" type="{http://www.w3.org/2001/XMLSchema}string" />
      *       &lt;attribute name="contact" type="{http://www.w3.org/2001/XMLSchema}string" />
      *       &lt;attribute name="addressLine1" type="{http://www.w3.org/2001/XMLSchema}string" />
      *       &lt;attribute name="addressLine2" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *       &lt;attribute name="postcode" type="{http://www.w3.org/2001/XMLSchema}string" />
+     *       &lt;attribute name="postalCode" type="{http://www.w3.org/2001/XMLSchema}string" />
      *       &lt;attribute name="city" type="{http://www.w3.org/2001/XMLSchema}string" />
      *       &lt;attribute name="state" type="{http://www.w3.org/2001/XMLSchema}string" />
      *       &lt;attribute name="country" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -5958,7 +5958,7 @@ public class SIE {
         protected String id;
         @XmlAttribute(name = "name", required = true)
         protected String name;
-        @XmlAttribute(name = "organizationalnumber")
+        @XmlAttribute(name = "organizationNumber")
         protected String organizationalnumber;
         @XmlAttribute(name = "contact")
         protected String contact;
@@ -5966,7 +5966,7 @@ public class SIE {
         protected String addressLine1;
         @XmlAttribute(name = "addressLine2")
         protected String addressLine2;
-        @XmlAttribute(name = "postcode")
+        @XmlAttribute(name = "postalCode")
         protected String postcode;
         @XmlAttribute(name = "city")
         protected String city;
@@ -6035,7 +6035,7 @@ public class SIE {
         }
 
         /**
-         * Gets the value of the organizationalnumber property.
+         * Gets the value of the organizationNumber property.
          * 
          * @return
          *     possible object is
@@ -6047,7 +6047,7 @@ public class SIE {
         }
 
         /**
-         * Sets the value of the organizationalnumber property.
+         * Sets the value of the organizationNumber property.
          * 
          * @param value
          *     allowed object is
@@ -6131,7 +6131,7 @@ public class SIE {
         }
 
         /**
-         * Gets the value of the postcode property.
+         * Gets the value of the postalCode property.
          * 
          * @return
          *     possible object is
@@ -6143,7 +6143,7 @@ public class SIE {
         }
 
         /**
-         * Sets the value of the postcode property.
+         * Sets the value of the postalCode property.
          * 
          * @param value
          *     allowed object is

@@ -18,4 +18,8 @@ public class ConverterException extends Exception {
     this("Error on line " + lineNumber + ": " + rootCause.getMessage() + "\n" + line, rootCause);
   }
   
+  public ConverterException(int lineNumber, String line, String message) {
+    this("Error on line " + lineNumber + ": " + message + "\n" + line);
+  }
+
 }

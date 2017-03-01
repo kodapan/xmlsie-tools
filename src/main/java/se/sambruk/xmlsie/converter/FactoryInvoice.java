@@ -15,7 +15,7 @@ public class FactoryInvoice {
 
   private SIE.AccountsPayable.Invoices.Invoice invoice;
 
-  private FactoryPayer payer;
+  private FactoryJournal journal;
   private String supplierName;
   private String supplierOrganizationNumber;
 

@@ -27,11 +27,11 @@ public class Converter {
 
   private Logger log = LoggerFactory.getLogger(getClass());
 
-  private ConverterConfiguration configuration;
+  private Configuration configuration;
 
   private List<ConverterException> errors = new ArrayList<>();
 
-  public Converter(ConverterConfiguration configuration) {
+  public Converter(Configuration configuration) {
     this.configuration = configuration;
   }
 
@@ -72,9 +72,11 @@ public class Converter {
 
   public void convertFromCsv(Reader reader, Writer output) throws Exception {
 
+    log.info("Parsing CSV...");
+
     Map<Integer, FactoryAccount> factoryAccounts = new HashMap<>();
     Map<String, FactoryInvoice> factoryInvoices = new HashMap<>();
-    Map<String, FactoryPayer> factoryPayers = new HashMap<>();
+    Map<String, FactoryJournal> factoryPayers = new HashMap<>();
 
     BufferedReader br = new BufferedReader(reader);
     String line = br.readLine(); // skip header
@@ -84,8 +86,8 @@ public class Converter {
       lineNumber++;
       try {
         String[] columns = line.split("\t");
-        if (columns.length != configuration.getColumns().length) {
-          throw new ConverterException("Row must contain exactly " + configuration.getColumns().length + " columns!");
+        if (columns.length != configuration.getColumns().size()) {
+          throw new ConverterException(lineNumber, line, "Row must contain exactly " + configuration.getColumns().size() + " columns!");
         }
         for (int columnIndex = 0; columnIndex < columns.length; columnIndex++) {
           columns[columnIndex] = columns[columnIndex].trim();
@@ -93,22 +95,25 @@ public class Converter {
             columns[columnIndex] = columns[columnIndex].substring(1, columns[columnIndex].length() - 1);
           }
           columns[columnIndex] = columns[columnIndex].trim();
+        }
 
-          Integer accountNumber = null;
-          String accountName = null;
-          String payerName = null;
-          String invoiceNumber = null;
-          String supplierName = null;
-          String supplierOrganizationNumber = null;
-          BigDecimal amountDebited = null;
+        Integer accountNumber = null;
+        String accountName = null;
+        String journalName = null;
+        String invoiceNumber = null;
+        String supplierName = null;
+        String supplierOrganizationNumber = null;
+        BigDecimal amountDebited = null;
 
-          if (configuration.getColumns()[columnIndex].getStereotype() == ConverterConfiguration.ColumnStereotype.ACCOUNT_NUMBER) {
+        for (int columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+
+          if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.ACCOUNT_NUMBER) {
             accountNumber = Integer.valueOf(columns[columnIndex]);
 
-          } else if (configuration.getColumns()[columnIndex].getStereotype() == ConverterConfiguration.ColumnStereotype.ACCOUNT_NAME) {
+          } else if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.ACCOUNT_NAME) {
             accountName = columns[columnIndex] == null ? "" : columns[columnIndex].trim();
 
-          } else if (configuration.getColumns()[columnIndex].getStereotype() == ConverterConfiguration.ColumnStereotype.ACCOUNT_NUMBER_AND_NAME) {
+          } else if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.ACCOUNT_NUMBER_AND_NAME) {
             Matcher matcher = accountNumberAndNamePattern.matcher(columns[columnIndex]);
             if (!matcher.matches()) {
               throw new ConverterException("Account name and number column does not match pattern " + accountNumberAndNamePattern.pattern());
@@ -117,79 +122,79 @@ public class Converter {
             accountNumber = Integer.valueOf(matcher.group(1));
             accountName = matcher.group(2) == null ? "" : matcher.group(2).trim();
 
-          } else if (configuration.getColumns()[columnIndex].getStereotype() == ConverterConfiguration.ColumnStereotype.JOURNAL) {
-            payerName = columns[columnIndex];
+          } else if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.JOURNAL) {
+            journalName = columns[columnIndex];
 
-          } else if (configuration.getColumns()[columnIndex].getStereotype() == ConverterConfiguration.ColumnStereotype.INVOICE_INTERNAL_IDENTITY) {
+          } else if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.INVOICE_INTERNAL_IDENTITY) {
             invoiceNumber = columns[columnIndex];
 
-          } else if (configuration.getColumns()[columnIndex].getStereotype() == ConverterConfiguration.ColumnStereotype.SUPPLIER_ORGANIZATION_NUMBER) {
+          } else if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.SUPPLIER_ORGANIZATION_NUMBER) {
             supplierOrganizationNumber = columns[columnIndex];
 
-          } else if (configuration.getColumns()[columnIndex].getStereotype() == ConverterConfiguration.ColumnStereotype.SUPPLIER_NAME) {
+          } else if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.SUPPLIER_NAME) {
             supplierName = columns[columnIndex];
 
-          } else if (configuration.getColumns()[columnIndex].getStereotype() == ConverterConfiguration.ColumnStereotype.AMOUNT_DEBITED) {
+          } else if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.AMOUNT_DEBITED) {
             amountDebited = new BigDecimal(columns[columnIndex].replaceAll(",", ""));
 
           } else {
-            throw new ConverterException("Unsupported column stereotype " + configuration.getColumns()[columnIndex].getStereotype());
+            throw new ConverterException("Unsupported column stereotype " + configuration.getColumns().get(columnIndex));
           }
-
-
-          if (accountNumber == null) {
-            throw new ConverterException("Missing account number");
-          }
-          if (accountName == null) {
-            throw new ConverterException("Missing account name");
-          }
-          if (payerName == null) {
-            throw new ConverterException("Missing payer name");
-          }
-          if (supplierName == null) {
-            throw new ConverterException("Missing supplier name");
-          }
-          if (supplierOrganizationNumber == null) {
-            throw new ConverterException("Missing supplier organization number");
-          }
-          if (amountDebited == null) {
-            throw new ConverterException("Missing amount debited");
-          }
-
-          FactoryAccount factoryAccount = factoryAccounts.get(accountNumber);
-          if (factoryAccount == null) {
-            factoryAccount = new FactoryAccount();
-            factoryAccount.setNumber(accountNumber);
-            factoryAccount.setName(accountName);
-            factoryAccounts.put(accountNumber, factoryAccount);
-          } else {
-            if (!factoryAccount.getName().equals(accountName)) {
-              throw new ConverterException("Account name " + accountName + " does not match previously seen account name " + factoryAccount.getName());
-            }
-          }
-
-          FactoryPayer factoryPayer = factoryPayers.get(payerName);
-          if (factoryPayer == null) {
-            factoryPayer = new FactoryPayer();
-            factoryPayer.setName(payerName);
-            factoryPayers.put(factoryPayer.getName(), factoryPayer);
-          }
-
-          FactoryInvoice factoryInvoice = factoryInvoices.get(invoiceNumber);
-          if (factoryInvoice == null) {
-            factoryInvoice = new FactoryInvoice();
-            factoryInvoice.setNumber(invoiceNumber);
-            factoryInvoice.setPayer(factoryPayer);
-            factoryInvoice.setSupplierName(supplierName);
-            factoryInvoice.setSupplierOrganizationNumber(supplierOrganizationNumber);
-            factoryInvoices.put(invoiceNumber, factoryInvoice);
-            factoryPayer.getInvoices().add(factoryInvoice);
-          }
-
-          factoryInvoice.getPostings().add(new FactoryInvoiceAccountAmountPosting(factoryAccount, amountDebited));
-
         }
-      } catch (ConverterException ce)  {
+
+        if (accountNumber == null) {
+          throw new ConverterException("Missing account number");
+        }
+        if (accountName == null) {
+          throw new ConverterException("Missing account name");
+        }
+        if (journalName == null) {
+          throw new ConverterException("Missing journal name");
+        }
+        if (supplierName == null) {
+          throw new ConverterException("Missing supplier name");
+        }
+        if (supplierOrganizationNumber == null) {
+          throw new ConverterException("Missing supplier organization number");
+        }
+        if (amountDebited == null) {
+          throw new ConverterException("Missing amount debited");
+        }
+
+        FactoryAccount factoryAccount = factoryAccounts.get(accountNumber);
+        if (factoryAccount == null) {
+          factoryAccount = new FactoryAccount();
+          factoryAccount.setNumber(accountNumber);
+          factoryAccount.setName(accountName);
+          factoryAccounts.put(accountNumber, factoryAccount);
+        } else {
+          if (!factoryAccount.getName().equals(accountName)) {
+            throw new ConverterException("Account name " + accountName + " does not match previously seen account name " + factoryAccount.getName());
+          }
+        }
+
+        FactoryJournal factoryJournal = factoryPayers.get(journalName);
+        if (factoryJournal == null) {
+          factoryJournal = new FactoryJournal();
+          factoryJournal.setName(journalName);
+          factoryPayers.put(factoryJournal.getName(), factoryJournal);
+        }
+
+        FactoryInvoice factoryInvoice = factoryInvoices.get(invoiceNumber);
+        if (factoryInvoice == null) {
+          factoryInvoice = new FactoryInvoice();
+          factoryInvoice.setNumber(invoiceNumber);
+          factoryInvoice.setJournal(factoryJournal);
+          factoryInvoice.setSupplierName(supplierName);
+          factoryInvoice.setSupplierOrganizationNumber(supplierOrganizationNumber);
+          factoryInvoices.put(invoiceNumber, factoryInvoice);
+          factoryJournal.getInvoices().add(factoryInvoice);
+        }
+
+        factoryInvoice.getPostings().add(new FactoryInvoiceAccountAmountPosting(factoryAccount, amountDebited));
+
+
+      } catch (ConverterException ce) {
         if (!configuration.isAllowErrors()) {
           throw ce;
         }
@@ -206,13 +211,8 @@ public class Converter {
       }
     }
 
-    List<FactoryInvoice> orderedFakturor = new ArrayList<>(factoryInvoices.values());
-    Collections.sort(orderedFakturor, new Comparator<FactoryInvoice>() {
-      @Override
-      public int compare(FactoryInvoice o1, FactoryInvoice o2) {
-        return Integer.compare(o2.getPostings().size(), o1.getPostings().size());
-      }
-    });
+    List<FactoryInvoice> orderedFactoryInvoices = new ArrayList<>(factoryInvoices.values());
+    orderedFactoryInvoices.sort((o1, o2) -> Integer.compare(o2.getPostings().size(), o1.getPostings().size()));
 
 
     ObjectFactory objectFactory = new ObjectFactory();
@@ -220,11 +220,11 @@ public class Converter {
     SIE sie = objectFactory.createSIE();
 
     sie.setCompany(objectFactory.createSIECompany());
-    sie.getCompany().setOrganizationalnumber(configuration.getCompany().getOrganizationalnumber());
+    sie.getCompany().setOrganizationalnumber(configuration.getCompany().getOrganizationNumber());
     sie.getCompany().setName(configuration.getCompany().getName());
     sie.getCompany().setAddressLine1(configuration.getCompany().getAddressLine1());
     sie.getCompany().setAddressLine2(configuration.getCompany().getAddressLine2());
-    sie.getCompany().setPostcode(configuration.getCompany().getPostcode());
+    sie.getCompany().setPostcode(configuration.getCompany().getPostalCode());
     sie.getCompany().setCity(configuration.getCompany().getCity());
     sie.getCompany().setCountryCode(configuration.getCompany().getCountryCode());
     sie.getCompany().setHomepage(configuration.getCompany().getHomepage());
@@ -330,7 +330,7 @@ public class Converter {
 
     financialYear.setJournals(objectFactory.createSIEAccountingFinancialYearsFinancialYearJournals());
 
-    for (FactoryPayer mottagaren : factoryPayers.values()) {
+    for (FactoryJournal mottagaren : factoryPayers.values()) {
 
       SIE.Accounting.FinancialYears.FinancialYear.Journals.Journal journal = objectFactory.createSIEAccountingFinancialYearsFinancialYearJournalsJournal();
       journal.setName(mottagaren.getName());

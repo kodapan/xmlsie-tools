@@ -10,7 +10,7 @@ import java.util.List;
  * @since 2017-03-01 20:08
  */
 @Data
-public class FactoryPayer {
+public class FactoryJournal {
   private String name;
   private List<FactoryInvoice> invoices = new ArrayList<>();
 }

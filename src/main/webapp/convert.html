@@ -15,86 +15,35 @@
     Select a file : <input type="file" name="file" size="45" />
   </p>
 
-  <table>
-    <tr>
-      <td>Allow errors</td>
-      <td><input type="checkbox" name="allowErrors"/></td>
-    </tr>
-
-    <tr>
-      <td>Currency</td>
-      <td><input type="text" name="currency" value="SEK"/></td>
-    </tr>
-    
-    <tr>
-      <td>Columns</td>
-      <td><input type="text" name="columns0" value="JOURNAL"/></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><input type="text" name="columns1" value="SUPPLIER_NAME"/></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><input type="text" name="columns2" value="SUPPLIER_ORGANIZATION_NUMBER"/></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><input type="text" name="columns3" value="INVOICE_INTERNAL_IDENTITY"/></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><input type="text" name="columns4" value="ACCOUNT_NUMBER"/></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><input type="text" name="columns5" value="ACCOUNT_NAME"/></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><input type="text" name="columns6" value="AMOUNT_DEBITED"/></td>
-    </tr>
-    <tr>
-      <td>homepage</td>
-      <td><input type="text" name="homepage" value="http://goteborg.se"/></td>
-    </tr>
-    <tr>
-      <td>organizationalnumber</td>
-      <td><input type="text" name="organizationalnumber" value="212000-1355"/></td>
-    </tr>
-    <tr>
-      <td>name</td>
-      <td><input type="text" name="name" value="Göteborgs kommun"/></td>
-    </tr>
-    <tr>
-      <td>addressLine1</td>
-      <td><input type="text" name="addressLine1" value="Köpmansgatan 20"/></td>
-    </tr>
-    <tr>
-      <td>addressLine2</td>
-      <td><input type="text" name="addressLine2"/></td>
-    </tr>
-    <tr>
-      <td>postcode</td>
-      <td><input type="text" name="postcode" value="411 13"/></td>
-    </tr>
-    <tr>
-      <td>city</td>
-      <td><input type="text" name="city" value="Göteborg"/></td>
-    </tr>
-    <tr>
-      <td>countryCode</td>
-      <td><input type="text" name="countryCode" value="SE"/></td>
-    </tr>
-    <tr>
-      <td>start</td>
-      <td><input type="text" name="start" value="2016-04-01T00:00:00+01:00[Europe/Stockholm]"/></td>
-    </tr>
-    <tr>
-      <td>end</td>
-      <td><input type="text" name="end" value="2016-05-01T00:00:00+01:00[Europe/Stockholm]"/></td>
-    </tr>
-  </table>
+  <textarea name="configuration" rows="30" cols="80">
+{
+    "allowErrors": true,
+    "currency": "SEK",
+    "columns": [
+      "JOURNAL",
+      "SUPPLIER_NAME",
+      "SUPPLIER_ORGANIZATION_NUMBER",
+      "INVOICE_INTERNAL_IDENTITY",
+      "ACCOUNT_NUMBER",
+      "ACCOUNT_NAME",
+      "AMOUNT_DEBITED"
+    ],
+    "financialYear": {
+      "start": "2017-01-01T00:00:00+01:00",
+      "end": "2017-02-01T00:00:00+01:00"
+    },
+    "company": {
+      "homepage": "https://tolvan.se",
+      "organizationNumber": "121212-1212",
+      "name": "Tolvan AB",
+      "addressLine1": "Gatan 123",
+      "addressLine2": "C/O Tol Van",
+      "postalCode": "123 45",
+      "city": "Staden",
+      "countryCode": "SE"
+    }
+}
+  </textarea>
 
   <br/>
 

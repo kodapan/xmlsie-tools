@@ -128,7 +128,7 @@ public class Validator {
       validationErrors.add("Missing <SIE><Company>");
     } else {
       if (sie.getCompany().getOrganizationalnumber() == null) {
-        validationErrors.add("Missing <SIE><Company organizationalnumber>");
+        validationErrors.add("Missing <SIE><Company organizationNumber>");
       } else {
         // todo Luhn check
       }
@@ -140,7 +140,7 @@ public class Validator {
         validationErrors.add("Missing <SIE><Company addressLine1>");
       }
       if (sie.getCompany().getPostcode() == null) {
-        validationErrors.add("Missing <SIE><Company postcode>");
+        validationErrors.add("Missing <SIE><Company postalCode>");
       }
       if (sie.getCompany().getCity() == null) {
         validationErrors.add("Missing <SIE><Company city>");

@@ -3,13 +3,14 @@ package se.sambruk.xmlsie.converter;
 import lombok.Data;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * @author kalle
  * @since 2017-03-01 07:45
  */
 @Data
-public class ConverterConfiguration {
+public class Configuration {
 
   private boolean allowErrors = false;
 
@@ -17,16 +18,16 @@ public class ConverterConfiguration {
   private Company company;
   private FinancialYear financialYear;
 
-  private Column[] columns;
+  private List<ColumnStereotype> columns;
 
   @Data
   public static class Company {
     private String homepage;
-    private String organizationalnumber;
+    private String organizationNumber;
     private String name;
     private String addressLine1;
     private String addressLine2;
-    private String postcode;
+    private String postalCode;
     private String city;
     private String countryCode = "SE";
   }
@@ -44,6 +45,7 @@ public class ConverterConfiguration {
     COST
   }
 
+
   public enum ColumnStereotype {
     JOURNAL,
     SUPPLIER_NAME,
@@ -52,12 +54,7 @@ public class ConverterConfiguration {
     ACCOUNT_NUMBER,
     ACCOUNT_NAME,
     ACCOUNT_NUMBER_AND_NAME,
-    AMOUNT_DEBITED,
-  }
+    AMOUNT_DEBITED;
 
-  @Data
-  public static class Column {
-    private ColumnStereotype stereotype;
   }
-
 }
