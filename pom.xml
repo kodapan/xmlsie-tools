@@ -18,6 +18,12 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.12</version>
+    </dependency>
+    
+    <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>20160212</version>
@@ -114,8 +120,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <encoding>UTF8</encoding>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
 

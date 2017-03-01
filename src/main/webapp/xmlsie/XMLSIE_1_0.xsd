@@ -177,7 +177,7 @@
 									<xsd:sequence>
 										<xsd:element name="Account" maxOccurs="unbounded">
 											<xsd:annotation>
-												<xsd:documentation>Deklarerar ett konto. Om importerande program inte har motsvarande konto upplagt skall det lägga upp det.</xsd:documentation>
+												<xsd:documentation>Deklarerar ett factoryAccount. Om importerande program inte har motsvarande factoryAccount upplagt skall det lägga upp det.</xsd:documentation>
 											</xsd:annotation>
 											<xsd:complexType>
 												<xsd:sequence>
@@ -527,7 +527,7 @@
 															<xsd:sequence>
 																<xsd:element name="ClosingBalance" maxOccurs="unbounded">
 																	<xsd:annotation>
-																		<xsd:documentation>En utgående balans för ett konto</xsd:documentation>
+																		<xsd:documentation>En utgående balans för ett factoryAccount</xsd:documentation>
 																	</xsd:annotation>
 																	<xsd:complexType>
 																		<xsd:group ref="BalanceGROUP"/>

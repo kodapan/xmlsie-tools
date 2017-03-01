@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+  <meta charset="utf-8">
+  <title>Single table -> XMLSIE converter</title>
+</head>
+<body>
+
+<h1>Single table -> XMLSIE converter</h1>
+
+<form action="/api/1.0.2/convert" method="post" enctype="multipart/form-data">
+
+  <p>
+    Select a file : <input type="file" name="file" size="45" />
+  </p>
+
+  <table>
+    <tr>
+      <td>Allow errors</td>
+      <td><input type="checkbox" name="allowErrors"/></td>
+    </tr>
+
+    <tr>
+      <td>Currency</td>
+      <td><input type="text" name="currency" value="SEK"/></td>
+    </tr>
+    
+    <tr>
+      <td>Columns</td>
+      <td><input type="text" name="columns0" value="JOURNAL"/></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="text" name="columns1" value="SUPPLIER_NAME"/></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="text" name="columns2" value="SUPPLIER_ORGANIZATION_NUMBER"/></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="text" name="columns3" value="INVOICE_INTERNAL_IDENTITY"/></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="text" name="columns4" value="ACCOUNT_NUMBER"/></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="text" name="columns5" value="ACCOUNT_NAME"/></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="text" name="columns6" value="AMOUNT_DEBITED"/></td>
+    </tr>
+    <tr>
+      <td>homepage</td>
+      <td><input type="text" name="homepage" value="http://goteborg.se"/></td>
+    </tr>
+    <tr>
+      <td>organizationalnumber</td>
+      <td><input type="text" name="organizationalnumber" value="212000-1355"/></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td><input type="text" name="name" value="Göteborgs kommun"/></td>
+    </tr>
+    <tr>
+      <td>addressLine1</td>
+      <td><input type="text" name="addressLine1" value="Köpmansgatan 20"/></td>
+    </tr>
+    <tr>
+      <td>addressLine2</td>
+      <td><input type="text" name="addressLine2"/></td>
+    </tr>
+    <tr>
+      <td>postcode</td>
+      <td><input type="text" name="postcode" value="411 13"/></td>
+    </tr>
+    <tr>
+      <td>city</td>
+      <td><input type="text" name="city" value="Göteborg"/></td>
+    </tr>
+    <tr>
+      <td>countryCode</td>
+      <td><input type="text" name="countryCode" value="SE"/></td>
+    </tr>
+    <tr>
+      <td>start</td>
+      <td><input type="text" name="start" value="2016-04-01T00:00:00+01:00[Europe/Stockholm]"/></td>
+    </tr>
+    <tr>
+      <td>end</td>
+      <td><input type="text" name="end" value="2016-05-01T00:00:00+01:00[Europe/Stockholm]"/></td>
+    </tr>
+  </table>
+
+  <br/>
+
+  <input type="submit" value="Upload It" />
+</form>
+
+
+
+</body>
+</html>
