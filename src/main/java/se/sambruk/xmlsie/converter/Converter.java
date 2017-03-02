@@ -76,7 +76,7 @@ public class Converter {
 
     Map<Integer, FactoryAccount> factoryAccounts = new HashMap<>();
     Map<String, FactoryInvoice> factoryInvoices = new HashMap<>();
-    Map<String, FactoryJournal> factoryPayers = new HashMap<>();
+    Map<String, FactoryJournal> factorJournals = new HashMap<>();
 
     BufferedReader br = new BufferedReader(reader);
     String line = br.readLine(); // skip header
@@ -173,11 +173,11 @@ public class Converter {
           }
         }
 
-        FactoryJournal factoryJournal = factoryPayers.get(journalName);
+        FactoryJournal factoryJournal = factorJournals.get(journalName);
         if (factoryJournal == null) {
           factoryJournal = new FactoryJournal();
           factoryJournal.setName(journalName);
-          factoryPayers.put(factoryJournal.getName(), factoryJournal);
+          factorJournals.put(factoryJournal.getName(), factoryJournal);
         }
 
         FactoryInvoice factoryInvoice = factoryInvoices.get(invoiceNumber);
@@ -253,7 +253,7 @@ public class Converter {
         sieAccount.setType(AccountTypeTYPE.LIABILITY);
       } else if (accountNumberPrefix == 3) {
         sieAccount.setType(AccountTypeTYPE.INCOME);
-      } else if (accountNumberPrefix == 4 || accountNumberPrefix == 5 || accountNumberPrefix == 6) {
+      } else if (accountNumberPrefix >= 4 ) {
         sieAccount.setType(AccountTypeTYPE.COST);
       } else {
         if (unknownAccountNumbers.add(factoryAccount.getNumber())) {
@@ -330,22 +330,22 @@ public class Converter {
 
     financialYear.setJournals(objectFactory.createSIEAccountingFinancialYearsFinancialYearJournals());
 
-    for (FactoryJournal mottagaren : factoryPayers.values()) {
+    for (FactoryJournal factoryJournal : factorJournals.values()) {
 
       SIE.Accounting.FinancialYears.FinancialYear.Journals.Journal journal = objectFactory.createSIEAccountingFinancialYearsFinancialYearJournalsJournal();
-      journal.setName(mottagaren.getName());
+      journal.setName(factoryJournal.getName());
       journal.setId(String.valueOf(financialYear.getJournals().getJournal().size()));
 
-      for (FactoryInvoice factoryInvoice : mottagaren.getInvoices()) {
+      for (FactoryInvoice factoryInvoice : factoryJournal.getInvoices()) {
 
         SIE.Accounting.FinancialYears.FinancialYear.Journals.Journal.JournalEntry journalEntry = objectFactory.createSIEAccountingFinancialYearsFinancialYearJournalsJournalJournalEntry();
 
         journalEntry.setId(String.valueOf(journal.getJournalEntry().size()));
 
-        for (FactoryInvoiceAccountAmountPosting kontering : factoryInvoice.getPostings()) {
+        for (FactoryInvoiceAccountAmountPosting posting : factoryInvoice.getPostings()) {
           SIE.Accounting.FinancialYears.FinancialYear.Journals.Journal.JournalEntry.LedgerEntry ledgerEntry = objectFactory.createSIEAccountingFinancialYearsFinancialYearJournalsJournalJournalEntryLedgerEntry();
-          ledgerEntry.setAccountId(BigInteger.valueOf(kontering.getAccount().getNumber()));
-          ledgerEntry.setAmount(kontering.getAmount());
+          ledgerEntry.setAccountId(BigInteger.valueOf(posting.getAccount().getNumber()));
+          ledgerEntry.setAmount(posting.getAmount());
           journalEntry.getLedgerEntry().add(ledgerEntry);
         }
 
@@ -366,6 +366,17 @@ public class Converter {
     sie.getAccounting().getFinancialYears().getFinancialYear().add(financialYear);
 
 
+    output.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+
+    if (getErrors() != null && !getErrors().isEmpty()) {
+      output.write("<!--\nErrors occurred while converting from single table file:\n\n");
+      for (ConverterException e : getErrors()) {
+        output.write(e.getMessage());
+        output.write("\n\n");
+      }
+      output.write("-->\n");
+    }
+    
     JAXBContext jaxbContext = JAXBContext.newInstance(SIE.class);
     Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 

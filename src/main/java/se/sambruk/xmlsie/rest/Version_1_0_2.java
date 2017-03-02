@@ -23,6 +23,7 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.zip.GZIPInputStream;
 
 /**
  * @author kalle
@@ -150,12 +151,12 @@ public class Version_1_0_2 {
     }
 
 
-
     final Converter converter = new Converter(configuration);
 
 
-
     File directory = File.createTempFile(fileDetail.getName(), ".dir");
+    final File xmlSieFile;
+
     try {
       if (!directory.delete()) {
         throw new IOException("Unable to remove temporary file " + directory.getAbsolutePath());
@@ -163,71 +164,55 @@ public class Version_1_0_2 {
       if (!directory.mkdirs()) {
         throw new IOException("Unable to create temporary directory " + directory.getAbsolutePath());
       }
-      File inputFile = new File(directory, fileDetail.getFileName());
-      final File xmlSieFile = new File(directory, fileDetail.getFileName() + ".sie.xml");
-      {
-        OutputStreamWriter xmlSieWriter = new OutputStreamWriter(new FileOutputStream(xmlSieFile), StandardCharsets.UTF_8);
-        IOUtils.copy(uploadedInputStream, new FileOutputStream(inputFile));
-        try {
-          converter.convert(inputFile, xmlSieWriter);
-        } catch (Exception e) {
-          return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
-        }
-        xmlSieWriter.close();
-      }
+      File uploadedFile = new File(directory, fileDetail.getFileName());
+      IOUtils.copy(uploadedInputStream, new FileOutputStream(uploadedFile));
 
-      // todo create output before deleting file
-      StreamingOutput stream = new StreamingOutput() {
-        @Override
-        public void write(OutputStream os)
-            throws IOException, WebApplicationException {
+      xmlSieFile = new File(directory, fileDetail.getFileName() + ".sie.xml");
+      OutputStreamWriter xmlSieWriter = new OutputStreamWriter(new FileOutputStream(xmlSieFile), StandardCharsets.UTF_8);
+      converter.convert(uploadedFile, xmlSieWriter);
+      xmlSieWriter.close();
 
-          if (converter.getErrors() != null && !converter.getErrors().isEmpty()) {
-            // add errors as comments
-
-            Writer out = new OutputStreamWriter(os, StandardCharsets.UTF_8);
-
-            BufferedReader xmlSieReader = new BufferedReader(new InputStreamReader(new FileInputStream(xmlSieFile), StandardCharsets.UTF_8));
-            String xmlHeader = xmlSieReader.readLine(); // XML header
-            out.write(xmlHeader);
-            out.write("\n<!--\nErrors while parsing:\n");
-            for (ConverterException e : converter.getErrors()) {
-              out.write(e.getMessage());
-              out.write("\n");
-            }
-            out.write("-->\n");
-
-            char[] buffer = new char[49152];
-            int readChars;
-            while ((readChars = xmlSieReader.read(buffer)) > 0) {
-              out.write(buffer, 0, readChars);
-            }
-
-            out.flush();
-
-          } else {
-            IOUtils.copy(new FileInputStream(xmlSieFile), os);
-          }
-
-
-        }
-      };
-
-      Response.ResponseBuilder responseBuilder;
-      if (converter.getErrors().isEmpty()) {
-        responseBuilder = Response.status(Response.Status.OK);
-      } else {
-        responseBuilder = Response.status(Response.Status.BAD_REQUEST);
-      }
-      responseBuilder.entity(stream);
-      responseBuilder.header("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileDetail.getFileName(), StandardCharsets.UTF_8.name()) + ".sie.xml\"");
-      return responseBuilder.build();
-
-    } finally {
-      FileUtils.deleteDirectory(directory);  // todo cause exception
+    } catch (Exception e) {
+      FileUtils.deleteDirectory(directory);
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 
 
+    Response.ResponseBuilder responseBuilder;
+    responseBuilder = Response.status(Response.Status.OK);
+
+    if (converter.getErrors().isEmpty()) {
+      responseBuilder = Response.status(Response.Status.OK);responseBuilder.header("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileDetail.getFileName(), StandardCharsets.UTF_8.name()) + ".sie.xml\"");
+
+    } else {
+      responseBuilder.header("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileDetail.getFileName(), StandardCharsets.UTF_8.name()) + ".with errors.sie.xml\"");
+
+    }
+    responseBuilder.header("Content-Length", xmlSieFile.length());
+
+    responseBuilder.entity(new StreamingOutput() {
+      @Override
+      public void write(OutputStream output)
+          throws IOException, WebApplicationException {
+        try {
+          InputStream input = new FileInputStream(xmlSieFile);
+          byte[] buffer = new byte[49152];
+          int read;
+          while ((read = input.read(buffer)) > 0) {
+            output.write(buffer, 0, read);
+          }
+          output.flush();
+          input.close();
+        } catch (Exception e) {
+          log.error("Caught exception", e);
+        } finally {
+          FileUtils.deleteDirectory(directory);
+        }
+      }
+    });
+    return responseBuilder.build();
+
+
   }
-  
+
 }
