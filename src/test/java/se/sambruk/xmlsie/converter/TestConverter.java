@@ -23,8 +23,8 @@ public class TestConverter {
             "{\n" +
             "    \"allowErrors\": false,\n" +
             "    \"currency\": \"SEK\",\n" +
-            "    \"headers\": true,\n" +
-            "    \"sumRow\": true,\n" +
+            "    \"ignoreFirstRow\": true,\n" +
+            "    \"ignoreLastRow\": true,\n" +
             "    \"columns\": [\n" +
             "      \"JOURNAL\",\n" +
             "      \"SUPPLIER_NAME\",\n" +
