@@ -4,6 +4,7 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 import org.apache.poi.ss.examples.ToCSV;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.sambruk.xmlsie.Validator;
 import se.sie.xml.AccountTypeTYPE;
 import se.sie.xml.JournalInfoTYPE;
 import se.sie.xml.ObjectFactory;
@@ -382,6 +383,10 @@ public class Converter {
 
     sie.getAccounting().getFinancialYears().getFinancialYear().add(financialYear);
 
+
+    if (!new Validator().validate(sie)) {
+      throw new Exception("Exception while validating XML SIE produced by internals. Please contact developer! https://github.com/kodapan/xmlsie-tools/issues/new");
+    }
 
     output.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 
