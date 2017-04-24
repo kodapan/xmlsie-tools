@@ -460,7 +460,7 @@ public class ToCSV {
     String csvLineElement = null;
     try {
 
-      log.info("Saving the CSV file [" + file.getName() + "]");
+      log.info("Saving the CSV file [" + file.getAbsolutePath() + "]");
 
       // Open a writer onto the CSV file.
       fw = new FileWriter(file);

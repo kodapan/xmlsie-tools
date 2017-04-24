@@ -72,18 +72,35 @@ public class Converter {
 
   public void convertFromCsv(Reader reader, Writer output) throws Exception {
 
+    log.info("Reading rows...");
+
+    BufferedReader br = new BufferedReader(reader);
+    List<String> lines = new ArrayList<>(49152);
+    {
+      String line;
+      while ((line = br.readLine()) != null) {
+        line = line.trim();
+        if (!line.isEmpty()) {
+          lines.add(line);
+        }
+      }
+
+      if (configuration.isIgnoreFirstRow()) {
+        lines.remove(0);
+      }
+      if (configuration.isIgnoreLastRow()) {
+        lines.remove(lines.size() - 1);
+      }
+    }
+
     log.info("Parsing CSV...");
 
     Map<Integer, FactoryAccount> factoryAccounts = new HashMap<>();
     Map<String, FactoryInvoice> factoryInvoices = new HashMap<>();
     Map<String, FactoryJournal> factorJournals = new HashMap<>();
 
-    BufferedReader br = new BufferedReader(reader);
-    String line = br.readLine(); // skip header
-
-    int lineNumber = 0;
-    while ((line = br.readLine()) != null) {
-      lineNumber++;
+    for (int lineNumber = 0; lineNumber < lines.size(); lineNumber++) {
+      String line = lines.get(lineNumber);
       try {
         String[] columns = line.split("\t");
         if (columns.length != configuration.getColumns().size()) {
@@ -253,7 +270,7 @@ public class Converter {
         sieAccount.setType(AccountTypeTYPE.LIABILITY);
       } else if (accountNumberPrefix == 3) {
         sieAccount.setType(AccountTypeTYPE.INCOME);
-      } else if (accountNumberPrefix >= 4 ) {
+      } else if (accountNumberPrefix >= 4) {
         sieAccount.setType(AccountTypeTYPE.COST);
       } else {
         if (unknownAccountNumbers.add(factoryAccount.getNumber())) {
@@ -376,7 +393,7 @@ public class Converter {
       }
       output.write("-->\n");
     }
-    
+
     JAXBContext jaxbContext = JAXBContext.newInstance(SIE.class);
     Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 

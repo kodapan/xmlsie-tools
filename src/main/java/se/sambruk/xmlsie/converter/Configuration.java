@@ -20,6 +20,9 @@ public class Configuration {
 
   private List<ColumnStereotype> columns;
 
+  private boolean ignoreFirstRow = true;
+  private boolean ignoreLastRow = false;
+
   @Data
   public static class Company {
     private String homepage;
@@ -38,13 +41,12 @@ public class Configuration {
     private OffsetDateTime end;
   }
 
-  public enum AccountType {
-    ASSET,
-    LIABILITY,
-    INCOME,
-    COST
-  }
-
+//  public enum AccountType {
+//    ASSET,
+//    LIABILITY,
+//    INCOME,
+//    COST
+//  }
 
   public enum ColumnStereotype {
     JOURNAL,
