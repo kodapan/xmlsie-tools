@@ -65,7 +65,7 @@ public class TestConverter {
 
   public ObjectMapper objectMapperProvider() {
     ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    //objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     objectMapper.registerModule(new JavaTimeModule());
