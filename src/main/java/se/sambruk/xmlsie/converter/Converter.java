@@ -1,6 +1,7 @@
 package se.sambruk.xmlsie.converter;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import org.apache.commons.csv.CSVParser;
 import org.apache.poi.ss.examples.ToCSV;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +43,12 @@ public class Converter {
     csvPath.mkdirs();
 
     ToCSV toCSV = new ToCSV();
-    toCSV.convertExcelToCSV(xlsFile.getAbsolutePath(), csvPath.getAbsolutePath(), "\t");
+    toCSV.convertExcelToCSV(xlsFile.getAbsolutePath(), csvPath.getAbsolutePath(), configuration.getCsv().getColumnSeparator());
     File[] files = csvPath.listFiles();
     if (files.length != 1) {
       throw new RuntimeException("Multiple files generated from XLS conversion?!");
     }
-    return new InputStreamReader(new FileInputStream(files[0]), "UTF8");
+    return new InputStreamReader(new FileInputStream(files[0]), "UTF-8");
   }
 
   public void convert(File inputFile, Writer output) throws Exception {
@@ -55,14 +56,14 @@ public class Converter {
     String lowerCasedFileName = inputFile.getName().toLowerCase();
 
     if (lowerCasedFileName.endsWith(".csv")) {
-      convertFromCsv(new InputStreamReader(new FileInputStream(inputFile), "UTF8"), output);
+      convertFromCsv(new InputStreamReader(new FileInputStream(inputFile), configuration.getCsv().getCharacterEncoding()), output);
 
     } else if (lowerCasedFileName.endsWith(".xlsx")
         || inputFile.getName().toLowerCase().endsWith(".xls")) {
       convertFromCsv(convertXls2Csv(inputFile), output);
 
     } else {
-      throw new RuntimeException("Don't know how to treat file. Please use .csv, .xls or .xlsx: " + inputFile.getName());
+      throw new RuntimeException("Don't know how to treat file. Please name file .csv, .xls or .xlsx: " + inputFile.getName());
 
     }
 
@@ -103,7 +104,7 @@ public class Converter {
     for (int lineNumber = 0; lineNumber < lines.size(); lineNumber++) {
       String line = lines.get(lineNumber);
       try {
-        String[] columns = line.split("\t");
+        String[] columns = line.split(configuration.getCsv().getColumnSeparator());
         if (columns.length != configuration.getColumns().size()) {
           throw new ConverterException(lineNumber, line, "Row must contain exactly " + configuration.getColumns().size() + " columns!");
         }
@@ -153,7 +154,10 @@ public class Converter {
             supplierName = columns[columnIndex];
 
           } else if (configuration.getColumns().get(columnIndex) == Configuration.ColumnStereotype.AMOUNT_DEBITED) {
-            amountDebited = new BigDecimal(columns[columnIndex].replaceAll(",", ""));
+            String value = columns[columnIndex];
+            value = value.replaceAll(Pattern.quote(configuration.getMonetary().getMagnitudeMarker()), "");
+            value = value.replaceAll(Pattern.quote(configuration.getMonetary().getDecimalMarker()), ".");
+            amountDebited = new BigDecimal(value);
 
           } else {
             throw new ConverterException("Unsupported column stereotype " + configuration.getColumns().get(columnIndex));

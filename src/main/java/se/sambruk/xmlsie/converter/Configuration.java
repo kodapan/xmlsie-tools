@@ -18,10 +18,19 @@ public class Configuration {
   private Company company;
   private FinancialYear financialYear;
 
+  private Monetary monetary = new Monetary();
+  private CSV csv = new CSV();
+
   private List<ColumnStereotype> columns;
 
   private boolean ignoreFirstRow = true;
   private boolean ignoreLastRow = false;
+
+  @Data
+  public static class CSV {
+    private String columnSeparator = "\t";
+    private String characterEncoding = "UTF-8";
+  }
 
   @Data
   public static class Company {
@@ -33,6 +42,12 @@ public class Configuration {
     private String postalCode;
     private String city;
     private String countryCode = "SE";
+  }
+
+  @Data
+  public static class Monetary {
+    private String decimalMarker = ".";
+    private String magnitudeMarker = " ";
   }
 
   @Data
