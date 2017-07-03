@@ -1,7 +1,9 @@
 package se.sambruk.xmlsie.converter;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.poi.ss.examples.ToCSV;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,46 +76,55 @@ public class Converter {
 
   public void convertFromCsv(Reader reader, Writer output) throws Exception {
 
-    log.info("Reading rows...");
+    log.info("Counting rows...");
 
-    BufferedReader br = new BufferedReader(reader);
-    List<String> lines = new ArrayList<>(49152);
-    {
-      String line;
-      while ((line = br.readLine()) != null) {
-        line = line.trim();
-        if (!line.isEmpty()) {
-          lines.add(line);
-        }
-      }
-
-      if (configuration.isIgnoreFirstRow()) {
-        lines.remove(0);
-      }
-      if (configuration.isIgnoreLastRow()) {
-        lines.remove(lines.size() - 1);
-      }
-    }
+//    int numberOfRows = 0;
+//
+//    BufferedReader br = new BufferedReader(reader);
+//    while ((br.readLine()) != null) {
+//      numberOfRows++;
+//    }
+//    br.close();
 
     log.info("Parsing CSV...");
+
+    CSVParser parser = CSVFormat.newFormat(configuration.getCsv().getColumnSeparator().charAt(0))
+        .withQuote('"')
+        .withIgnoreSurroundingSpaces(true)
+        .parse(reader);
+    List<CSVRecord> records = parser.getRecords();
+
+    log.info("Processing "+records.size()+" records...");
 
     Map<Integer, FactoryAccount> factoryAccounts = new HashMap<>();
     Map<String, FactoryInvoice> factoryInvoices = new HashMap<>();
     Map<String, FactoryJournal> factorJournals = new HashMap<>();
+    
+    String[] columns = new String[configuration.getColumns().size()];
 
-    for (int lineNumber = 0; lineNumber < lines.size(); lineNumber++) {
-      String line = lines.get(lineNumber);
+    for (int lineNumber = 0; lineNumber < records.size(); lineNumber++) {
+
+      CSVRecord record = records.get(lineNumber);
+
+      if (lineNumber == 0 && configuration.isIgnoreFirstRow()) {
+        continue;
+      } else if (lineNumber == records.size() -1  && configuration.isIgnoreLastRow()) {
+        continue;
+      }
+
       try {
-        String[] columns = line.split(configuration.getCsv().getColumnSeparator());
-        if (columns.length != configuration.getColumns().size()) {
-          throw new ConverterException(lineNumber, line, "Row must contain exactly " + configuration.getColumns().size() + " columns!");
+
+        if (record.size() != configuration.getColumns().size()) {
+          throw new ConverterException(lineNumber, record.toString(), "Row must contain exactly " + configuration.getColumns().size() + " columns!");
         }
-        for (int columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+
+        for (int columnIndex = 0; columnIndex < record.size(); columnIndex++) {
+          columns[columnIndex] = record.get(columnIndex);
           columns[columnIndex] = columns[columnIndex].trim();
-          if (columns[columnIndex].startsWith("\"") && columns[columnIndex].endsWith("\"")) {
-            columns[columnIndex] = columns[columnIndex].substring(1, columns[columnIndex].length() - 1);
-          }
-          columns[columnIndex] = columns[columnIndex].trim();
+//          if (columns[columnIndex].startsWith("\"") && columns[columnIndex].endsWith("\"")) {
+//            columns[columnIndex] = columns[columnIndex].substring(1, columns[columnIndex].length() - 1);
+//          }
+//          columns[columnIndex] = columns[columnIndex].trim();
         }
 
         Integer accountNumber = null;
@@ -223,7 +234,7 @@ public class Converter {
         errors.add(ce);
 
       } catch (Exception e) {
-        ConverterException ce = new ConverterException(lineNumber, line, e);
+        ConverterException ce = new ConverterException(lineNumber, record.toString(), e);
         log.error("Caught exception", ce);
         if (!configuration.isAllowErrors()) {
           throw ce;

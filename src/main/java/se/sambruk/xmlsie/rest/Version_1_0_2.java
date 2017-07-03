@@ -174,7 +174,10 @@ public class Version_1_0_2 {
 
     } catch (Exception e) {
       FileUtils.deleteDirectory(directory);
-      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      e.printStackTrace(pw);
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(sw.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
 

@@ -77,22 +77,40 @@
 <h2>Data file</h2>
 
 <p>
-  Input files must be XLSX or tab delimited CSV encoded with UTF-8.
-</p>
-
-<p>
-  In case of CSV it allows "quoted" values,
-  monetary amounts use period (.) as decimal identifier
-  while comma (,) or whitespace (&nbsp;) is optionally used for magnitude markers.
+  Input files must be XLSX or CSV.
 </p>
 
 <h2>JSON configuration attributes</h2>
+
+<p>
+  In case of XLSX as input file, do not touch the <span class="configuration_attribute">csv</span> configuration values.
+</p>
 
 <p>
   <span class="configuration_attribute">allowErrors</span><br/>
   If set to true the converter will ignore all errors and still produce an output file.
   In case of any errors occurred, response file will be named <span class="filename">[input file name].with errors.sie.xml</span>,
   and all errors will be listed in a top comment section of the output file.
+</p>
+
+<p>
+  <span class="configuration_attribute">csv/columnSeparator</span><br/>
+  Column separation in CSV rows. Usually a semicolon or tab value. For tab, use \t
+</p>
+
+<p>
+  <span class="configuration_attribute">csv/characterEncoding</span><br/>
+  Character encoding used in CSV file. UTF-8, ISO 8859-1, ASCII or what not.
+</p>
+
+<p>
+  <span class="configuration_attribute">monetary/decimalMarker</span><br/>
+  Character used to denote a decimal. Usually a period (30,23) or a comma (30.23).
+</p>
+
+<p>
+  <span class="configuration_attribute">monetary/magnitudeMarker</span><br/>
+  Character used to denote an integer magnitude. Usually a whitespace (1 234.56) or a comma (1,234.56).
 </p>
 
 <p>
